@@ -114,7 +114,7 @@ blockchain_net:
 
 experiments:
   enable_injection: true
-  scenario: "s2"     # S1 | S2 | S3
+  scenario: "S2"     # S1 | S2 | S3
 
   injection_window:
     start_window: 500
