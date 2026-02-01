@@ -27,7 +27,7 @@ The resulting framework enables tamper-resistant, auditable, and explainable mar
 # How to Run
 1. Environment Setup
 
-Python 3.9 or later is recommended.
+Python 3.11 or later is recommended.
 
 conda create -n maritime-ai python=3.9
 conda activate maritime-ai
