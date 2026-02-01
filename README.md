@@ -65,7 +65,13 @@ Model checkpoints and logs will be saved automatically.
 
 Run evaluation scripts to generate metrics and visual outputs:
 
-python evaluate.py
+python experiments/run_pipeline.py --config configs/experiments/s0.yaml --ports ports/ports.yaml
+python experiments/run_pipeline.py --config configs/experiments/s1.yaml --ports ports/ports.yaml
+python experiments/run_pipeline.py --config configs/experiments/s2.yaml --ports ports/ports.yaml
+python experiments/run_pipeline.py --config configs/experiments/s3.yaml --ports ports/ports.yaml
+python experiments/calibrate_policy.py
+python experiments/evaluate_end2end.py
+
 
 
 Results will be stored in:
