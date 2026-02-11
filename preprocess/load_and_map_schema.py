@@ -66,7 +66,7 @@ def sanitize(df: pd.DataFrame, tz_hint: str = "UTC") -> pd.DataFrame:
     - sog: 0..102.3 (AIS spec special value 102.2)
     - cog: 0..360
     """
-    from utils.time import to_datetime_utc                                
+    from utils.time import to_datetime_utc  # local import to avoid cycles
 
     df = df.copy()
 

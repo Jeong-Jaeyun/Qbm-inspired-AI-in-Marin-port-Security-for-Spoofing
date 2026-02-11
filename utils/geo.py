@@ -1,4 +1,4 @@
-              
+# utils/geo.py
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -13,7 +13,7 @@ def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     """
     Great-circle distance between two points (degrees) in kilometers.
     """
-                                
+    # Convert degrees to radians
     phi1 = math.radians(lat1)
     phi2 = math.radians(lat2)
     dphi = math.radians(lat2 - lat1)
@@ -67,15 +67,15 @@ def grid_index(
     if (not inside) and (not clamp):
         return None, None
 
-                         
+    # Normalize to [0, 1]
     x = (lon - bbox.min_lon) / (bbox.width() + 1e-15)
     y = (lat - bbox.min_lat) / (bbox.height() + 1e-15)
 
-                        
+    # Convert to indices
     gx = int(math.floor(x * nx))
     gy = int(math.floor(y * ny))
 
-                                                                
+    # Points on the max edge fall into nx/ny; clamp to nx-1/ny-1
     if clamp:
         gx = min(max(gx, 0), nx - 1)
         gy = min(max(gy, 0), ny - 1)

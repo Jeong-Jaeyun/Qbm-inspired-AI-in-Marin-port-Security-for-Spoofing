@@ -16,7 +16,7 @@ def _load_ports(path: str) -> Dict:
 
 
 def _point_in_poly(lon: float, lat: float, poly: Iterable[Tuple[float, float]]) -> bool:
-                                               
+    # Ray casting algorithm for lon/lat polygon
     inside = False
     pts = list(poly)
     n = len(pts)

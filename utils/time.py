@@ -1,4 +1,4 @@
-               
+# utils/time.py
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -20,12 +20,12 @@ def to_datetime_utc(series: pd.Series, tz_hint: str = "UTC") -> pd.Series:
     """
     ts = pd.to_datetime(series, errors="coerce", utc=False)
 
-                                                      
-                                                        
+    # If ts is timezone-aware already, tz will be set.
+    # Pandas uses dtype datetime64[ns, tz] for tz-aware.
     if getattr(ts.dt, "tz", None) is not None:
         return ts.dt.tz_convert("UTC")
 
-                                                     
+    # Naive -> localize with hint then convert to UTC
     ts = ts.dt.tz_localize(tz_hint, ambiguous="NaT", nonexistent="NaT")
     return ts.dt.tz_convert("UTC")
 

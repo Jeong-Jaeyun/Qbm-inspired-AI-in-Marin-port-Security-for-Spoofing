@@ -16,7 +16,7 @@ def onehot_levels(df: pd.DataFrame, feature_order: Iterable[str]) -> pd.DataFram
         if level_col not in df.columns:
             raise KeyError(f"Missing discretized column: {level_col}")
         dummies = pd.get_dummies(df[level_col], prefix=feat)
-                                       
+        # Ensure all three levels exist
         for lvl in ["L", "M", "H"]:
             col_name = f"{feat}_{lvl}"
             if col_name not in dummies:

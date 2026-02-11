@@ -34,7 +34,7 @@ def apply_quantiles(df: pd.DataFrame, thresholds: Dict[str, Dict[str, float]]) -
         low, high = th["low"], th["high"]
         level_col = f"level_{col}"
         if pd.isna(low) or pd.isna(high) or low >= high:
-                                                            
+            # Fallback for constant/degenerate distributions
             levels = pd.Series("M", index=df.index)
             levels[df[col] < low] = "L"
             levels[df[col] > high] = "H"

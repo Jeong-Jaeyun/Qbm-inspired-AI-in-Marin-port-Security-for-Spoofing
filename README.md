@@ -27,7 +27,7 @@ The resulting framework enables tamper-resistant, auditable, and explainable mar
 # How to Run
 1. Environment Setup
 
-Python 3.11 or later is recommended.
+Python 3.9 or later is recommended.
 
 conda create -n maritime-ai python=3.9
 conda activate maritime-ai
@@ -65,13 +65,7 @@ Model checkpoints and logs will be saved automatically.
 
 Run evaluation scripts to generate metrics and visual outputs:
 
-python experiments/run_pipeline.py --config configs/experiments/s0.yaml --ports ports/ports.yaml
-python experiments/run_pipeline.py --config configs/experiments/s1.yaml --ports ports/ports.yaml
-python experiments/run_pipeline.py --config configs/experiments/s2.yaml --ports ports/ports.yaml
-python experiments/run_pipeline.py --config configs/experiments/s3.yaml --ports ports/ports.yaml
-python experiments/calibrate_policy.py
-python experiments/evaluate_end2end.py
-
+python evaluate.py
 
 
 Results will be stored in:

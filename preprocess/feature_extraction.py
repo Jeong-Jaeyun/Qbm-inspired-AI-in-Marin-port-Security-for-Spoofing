@@ -32,45 +32,45 @@ def _message_burstiness(counts: pd.Series, baseline_windows: int, eps: float) ->
 
 
 def _position_jump_rate(df: pd.DataFrame, vmax_knots: float) -> pd.Series:
-    from utils.geo import haversine_km                                                               
+    from utils.geo import haversine_km  # local import to avoid hard dependency at module import time
 
     if not {"mmsi", "ts", "lat", "lon", "window_id"}.issubset(df.columns):
         raise KeyError("df must contain columns: mmsi, ts, lat, lon, window_id")
 
     d = df.sort_values(["mmsi", "ts"]).copy()
 
-                             
+    # Previous point per MMSI
     d["lat_prev"] = d.groupby("mmsi")["lat"].shift(1)
     d["lon_prev"] = d.groupby("mmsi")["lon"].shift(1)
     d["ts_prev"] = d.groupby("mmsi")["ts"].shift(1)
 
-                        
+    # Time delta (hours)
     dt_h = (d["ts"] - d["ts_prev"]).dt.total_seconds() / 3600.0
     d["dt_h"] = dt_h
 
-                                        
+    # Distance (km) for valid pairs only
     valid = d["lat_prev"].notna() & d["lon_prev"].notna() & d["dt_h"].notna() & (d["dt_h"] > 0)
 
-                                                      
+    # Initialize implied speed as NaN (float-friendly)
     d["v_knots"] = np.nan
 
-                                                                                
-                                      
+    # Compute implied speed for valid rows (row-wise apply only on valid subset)
+    # (최적화는 나중에 가능: numpy 벡터화/numba 등)
     def _dist_km(row) -> float:
         return haversine_km(row["lat_prev"], row["lon_prev"], row["lat"], row["lon"])
 
     dist_km = d.loc[valid].apply(_dist_km, axis=1)
     v_kmh = dist_km / d.loc[valid, "dt_h"]
-    v_knots = v_kmh / 1.852                       
+    v_knots = v_kmh / 1.852  # 1 knot = 1.852 km/h
     d.loc[valid, "v_knots"] = v_knots
 
-               
+    # Jump flag
     flag = (d["v_knots"] > float(vmax_knots))
 
-                                                                                            
+    # Aggregate per window (assign to the later point's window_id = current row's window_id)
     out = flag.groupby(d["window_id"]).mean()
 
-                                                                              
+    # Windows with no valid pairs won't appear; caller fillna(0) later is fine
     return out
 
 
@@ -128,23 +128,23 @@ def compute_features(df: pd.DataFrame, cfg: Dict) -> pd.DataFrame:
     sog_high = cfg["features"].get("sog_high_knots", 10.0)
     sog_jump_rate = cfg["features"].get("sog_jump_knots_per_min", 20.0)
 
-                           
+    # F1: unique MMSI count
     f1 = df.groupby("window_id")["mmsi"].nunique()
 
-                       
+    # F2: new MMSI rate
     f2 = _new_mmsi_rate(df, lookback_k)
 
-                            
+    # F3: message burstiness
     counts = df.groupby("window_id").size()
     f3 = _message_burstiness(counts, burst_w, eps)
 
-                                                        
+    # F4: position jump rate (proxy via speed threshold)
     f4 = _position_jump_rate(df, vmax)
 
-                                     
+    # F5: speed/heading inconsistency
     f5 = _speed_heading_inconsistency(df, sog_high, cog_jump, sog_jump_rate)
 
-                                 
+    # F6: spatial density entropy
     f6 = _spatial_density_entropy(df, eps)
 
     feats = pd.concat(
