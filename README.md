@@ -82,7 +82,7 @@ The code is not intended for production deployment without further validation.
 
 # License & Copyright
 
-© UCS LAB. All rights reserved.
+© SysCore LAB. All rights reserved.
 
 This code and associated research materials are the intellectual property of UCS LAB.
 Unauthorized copying, redistribution, or commercial use without explicit permission is prohibited.
