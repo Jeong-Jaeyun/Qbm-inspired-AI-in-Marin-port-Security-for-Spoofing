@@ -84,10 +84,10 @@ The code is not intended for production deployment without further validation.
 
 © SysCore LAB. All rights reserved.
 
-This code and associated research materials are the intellectual property of UCS LAB.
+This code and associated research materials are the intellectual property of SysCore LAB.
 Unauthorized copying, redistribution, or commercial use without explicit permission is prohibited.
 
-For academic or collaborative inquiries, please contact the authors through UCS LAB.
+For academic or collaborative inquiries, please contact the authors through SysCore LAB.
 
 # Citation
 
